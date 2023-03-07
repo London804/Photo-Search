@@ -21,12 +21,11 @@ interface Photos {
 
 export default function Home() {
   const [curatedPhotos, setCuratedPhotos] = useState<any| null>(null);
-  const [currentPage, setCurrentPage] = useState(1);
 
 
-  const getPhotos = async () => {
+  const getPhotos = async (page?: number) => {
     try {
-      const data = await getCuratedPhotos()
+      const data = await getCuratedPhotos(page)
       console.log('data', data);
       if (!data) {
         console.log('error');
@@ -48,7 +47,7 @@ export default function Home() {
 
   const changePage = ((event, page) => {
     console.log('page', page);
-    setCurrentPage(page)
+    getPhotos(page)
   })
 
   return (
@@ -80,7 +79,7 @@ export default function Home() {
           <Paginate>
             <Pagination
               count={curatedPhotos.total_results}
-              page={currentPage}
+              page={curatedPhotos.page}
               siblingCount={3}
               size='large'
               onChange={changePage}

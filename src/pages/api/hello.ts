@@ -11,7 +11,11 @@ export const getCuratedPhotos = async (page?: number) => {
   try {
     const response = createClient(key);
   
-    return await response.photos.curated({ per_page: 10 });
+    if (!page) {
+      return await response.photos.curated({ per_page: 10 });
+    } else {
+      return await response.photos.curated({ per_page: 10, page });
+    }
   } catch (e) {
     console.log('error', e);
   }
