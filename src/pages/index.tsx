@@ -2,12 +2,11 @@ import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { getCuratedPhotos } from './api/hello';
-// import Pagination from '../components/Pagination';
 import {Paginate} from '../components/pagination.styles';
 import Pagination from '@mui/material/Pagination';
-
+import { Search } from '../components/search.styles';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -20,10 +19,11 @@ interface Photos {
 }
 
 export default function Home() {
-  const [curatedPhotos, setCuratedPhotos] = useState<any| null>(null);
+  const [curatedPhotos, setCuratedPhotos] = useState<any | null>(null);
+  const [searchQuery, setSearchQuery] = useState<any | null>(undefined);
+  const query = useRef(null);
 
-
-  const getPhotos = async (page?: number) => {
+  const getPhotos = async (page?: number, query?: string) => {
     try {
       const data = await getCuratedPhotos(page)
       console.log('data', data);
@@ -50,6 +50,12 @@ export default function Home() {
     getPhotos(page)
   })
 
+  const querySearch = (query) => {
+    query.preventDefault();
+    console.log('searchQuery', searchQuery);
+    console.log('query', query?.target[0].value);
+  }
+
   return (
     <>
       <Head>
@@ -59,6 +65,23 @@ export default function Home() {
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <main className={styles.container}>
+
+      <Search>
+        <div className='search-container'>
+          <form ref={query} onSubmit={querySearch}>
+            <input 
+              className='search-bar' 
+              type="text" 
+              placeholder='Search...'
+              name="search" 
+              value={searchQuery} ></input>
+              <button className='search-button'>
+                <span className="ico ico-mglass"></span>
+              </button>
+          </form>
+            
+        </div>
+      </Search>
        
         <section className={styles.flex}>
           {curatedPhotos?.photos.map(photo => {

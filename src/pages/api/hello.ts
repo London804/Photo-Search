@@ -7,7 +7,7 @@ const key = process.env.NEXT_PUBLIC_API_KEY;
 const curatedURL = 'https://api.pexels.com/v1/curated';
 
 
-export const getCuratedPhotos = async (page?: number) => {
+export const getCuratedPhotos = async (page?: number, query?: string) => {
   try {
     const response = createClient(key);
   
