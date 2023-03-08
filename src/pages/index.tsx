@@ -31,23 +31,13 @@ export default function Home() {
         console.log('error');
       } else {
         setPhotos(data);
-        setSearchQuery(false)
+        setSearchQuery(null)
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
     }
   }
-  useEffect(() => {
-    const pageNumber = sessionStorage.getItem('page');
- 
-    if (pageNumber) {
-      console.log('pageNumber', pageNumber);
-      getPhotos(Number(pageNumber));
-    } else {
-      getPhotos();
-    }
-  },[])
 
   const queryPhotos = async (query: string, page?: number) => {
     try {
@@ -56,7 +46,6 @@ export default function Home() {
       if (!data) {
         console.log('error');
       } else {
-        console.log('gucci!')
         setPhotos(data);
         
       }
@@ -65,8 +54,28 @@ export default function Home() {
       console.log('error something went wrong', e);
     }
   }
+
+  useEffect(() => {
+    const pageNumber = sessionStorage.getItem('page');
+    const searchQuery = sessionStorage.getItem('searchQuery');
+    console.log('sessionStorage', Object.values(sessionStorage));
+   
+    if (searchQuery !== 'null') {
+      console.log('searchQuery init', searchQuery);
+      queryPhotos(searchQuery, Number(pageNumber))
+      setSearchQuery(searchQuery);
+    } else {
+      if (pageNumber) {
+        console.log('pageNumber', pageNumber);
+        getPhotos(Number(pageNumber));
+      } else {
+        getPhotos();
+      }
+    }
+  }, [])
   
   const changePage = ((event, page) => {
+    console.log('searchQuery change page', searchQuery);
     if (!searchQuery) {
       getPhotos(page)
     } else {
