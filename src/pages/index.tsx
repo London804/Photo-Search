@@ -39,7 +39,14 @@ export default function Home() {
     }
   }
   useEffect(() => {
-    getPhotos();
+    const pageNumber = sessionStorage.getItem('page');
+ 
+    if (pageNumber) {
+      console.log('pageNumber', pageNumber);
+      getPhotos(Number(pageNumber));
+    } else {
+      getPhotos();
+    }
   },[])
 
   const queryPhotos = async (query: string, page?: number) => {
@@ -60,8 +67,6 @@ export default function Home() {
   }
   
   const changePage = ((event, page) => {
-    console.log('page', page);
-    console.log('searchQuery', searchQuery);
     if (!searchQuery) {
       getPhotos(page)
     } else {
@@ -80,13 +85,9 @@ export default function Home() {
   })
 
   useEffect(() => {
-    console.log('searchQuery', searchQuery)
-  }, [searchQuery])
-
-  // useEffect(() => {
-  //   sessionStorage.setItem('curatedPhotos', JSON.stringify(photos));
-  //   sessionStorage.setItem('searchQuery', searchQuery);
-  // }, [photos, searchQuery]);
+    sessionStorage.setItem('page', photos?.page);
+    sessionStorage.setItem('searchQuery', searchQuery);
+  }, [photos, searchQuery]);
 
   return (
     <>
@@ -119,7 +120,7 @@ export default function Home() {
 
        
         <section className={styles.flex}>
-          {photos?.photos.map(photo => {
+          {photos?.photos?.map(photo => {
             return ( 
               <div className={styles.photo_container} key={photo.id}>
                 <Image 

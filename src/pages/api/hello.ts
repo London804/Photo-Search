@@ -6,7 +6,7 @@ import { createClient } from 'pexels';
 const key = process.env.NEXT_PUBLIC_API_KEY;
 const client = createClient(key);
 
-export const getCuratedPhotos = async (page?: number, query?: string) => {
+export const getCuratedPhotos = async (page?: number) => {
   try {
     if (!page) {
       return await client.photos.curated({ per_page: 10 });
