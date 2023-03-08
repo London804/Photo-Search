@@ -19,7 +19,7 @@ interface Photos {
 }
 
 export default function Home() {
-  const [curatedPhotos, setCuratedPhotos] = useState<any | null>(null);
+  const [photos, setPhotos] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<any | null>(undefined);
   const formQuery = useRef(null);
 
@@ -30,7 +30,7 @@ export default function Home() {
       if (!data) {
         console.log('error');
       } else {
-        setCuratedPhotos(data);
+        setPhotos(data);
         setSearchQuery(false)
       }
 
@@ -50,7 +50,7 @@ export default function Home() {
         console.log('error');
       } else {
         console.log('gucci!')
-        setCuratedPhotos(data);
+        setPhotos(data);
         
       }
 
@@ -83,6 +83,11 @@ export default function Home() {
     console.log('searchQuery', searchQuery)
   }, [searchQuery])
 
+  // useEffect(() => {
+  //   sessionStorage.setItem('curatedPhotos', JSON.stringify(photos));
+  //   sessionStorage.setItem('searchQuery', searchQuery);
+  // }, [photos, searchQuery]);
+
   return (
     <>
       <Head>
@@ -114,7 +119,7 @@ export default function Home() {
 
        
         <section className={styles.flex}>
-          {curatedPhotos?.photos.map(photo => {
+          {photos?.photos.map(photo => {
             return ( 
               <div className={styles.photo_container} key={photo.id}>
                 <Image 
@@ -136,11 +141,11 @@ export default function Home() {
           })}
         </section>
 
-        {curatedPhotos && 
+        {photos && 
           <Paginate>
             <Pagination
-              count={Math.floor(curatedPhotos.total_results / curatedPhotos.per_page)}
-              page={curatedPhotos.page}
+              count={Math.floor(photos.total_results / photos.per_page)}
+              page={photos.page}
               siblingCount={3}
               size='large'
               onChange={changePage}

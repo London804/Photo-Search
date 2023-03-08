@@ -4,11 +4,10 @@ import { createClient } from 'pexels';
 
 
 const key = process.env.NEXT_PUBLIC_API_KEY;
-
+const client = createClient(key);
 
 export const getCuratedPhotos = async (page?: number, query?: string) => {
   try {
-    const client = createClient(key);
     if (!page) {
       return await client.photos.curated({ per_page: 10 });
     } else {
@@ -23,7 +22,6 @@ export const getCuratedPhotos = async (page?: number, query?: string) => {
 export const getQueryPhotos = async (query: string, page?: number,) => {
   console.log('hit')
   try {
-    const client = createClient(key);
     if (!page) {
       return await client.photos.search({ query, per_page: 10 });
     } else {
