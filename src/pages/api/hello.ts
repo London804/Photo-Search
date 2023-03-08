@@ -4,17 +4,30 @@ import { createClient } from 'pexels';
 
 
 const key = process.env.NEXT_PUBLIC_API_KEY;
-const curatedURL = 'https://api.pexels.com/v1/curated';
 
 
 export const getCuratedPhotos = async (page?: number, query?: string) => {
   try {
-    const response = createClient(key);
-  
+    const client = createClient(key);
     if (!page) {
-      return await response.photos.curated({ per_page: 10 });
+      return await client.photos.curated({ per_page: 10 });
     } else {
-      return await response.photos.curated({ per_page: 10, page });
+      return await client.photos.curated({ per_page: 10, page });
+    }
+  } catch (e) {
+    console.log('error', e);
+  }
+}
+
+
+export const getQueryPhotos = async (query: string, page?: number,) => {
+  console.log('hit')
+  try {
+    const client = createClient(key);
+    if (!page) {
+      return await client.photos.search({ query, per_page: 10 });
+    } else {
+      return await client.photos.search({ query, per_page: 10, page });
     }
   } catch (e) {
     console.log('error', e);

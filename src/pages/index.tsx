@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { Inter } from 'next/font/google';
 import styles from '@/styles/Home.module.css'
 import { useEffect, useState, useRef, useCallback } from 'react';
-import { getCuratedPhotos } from './api/hello';
+import { getCuratedPhotos, getQueryPhotos } from './api/hello';
 import {Paginate} from '../components/pagination.styles';
 import Pagination from '@mui/material/Pagination';
 import { Search } from '../components/search.styles';
@@ -21,40 +21,67 @@ interface Photos {
 export default function Home() {
   const [curatedPhotos, setCuratedPhotos] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<any | null>(undefined);
-  const query = useRef(null);
+  const formQuery = useRef(null);
 
-  const getPhotos = async (page?: number, query?: string) => {
+  const getPhotos = async (page?: number) => { 
     try {
       const data = await getCuratedPhotos(page)
       console.log('data', data);
       if (!data) {
         console.log('error');
       } else {
-        console.log('gucci!')
         setCuratedPhotos(data);
+        setSearchQuery(false)
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
     }
-
   }
   useEffect(() => {
     getPhotos();
   },[])
 
-  
+  const queryPhotos = async (query: string, page?: number) => {
+    try {
+      const data = await getQueryPhotos(query, page)
+      console.log('data', data);
+      if (!data) {
+        console.log('error');
+      } else {
+        console.log('gucci!')
+        setCuratedPhotos(data);
+        
+      }
 
+    } catch (e) {
+      console.log('error something went wrong', e);
+    }
+  }
+  
   const changePage = ((event, page) => {
     console.log('page', page);
-    getPhotos(page)
+    console.log('searchQuery', searchQuery);
+    if (!searchQuery) {
+      getPhotos(page)
+    } else {
+      queryPhotos(searchQuery, page);
+    }
+
   })
 
-  const querySearch = (query) => {
+  const querySearch = ((query) => {
     query.preventDefault();
-    console.log('searchQuery', searchQuery);
+
     console.log('query', query?.target[0].value);
-  }
+    const searchText = query?.target[0].value
+    setSearchQuery(searchText)
+    queryPhotos(searchText)
+  })
+
+  useEffect(() => {
+    console.log('searchQuery', searchQuery)
+  }, [searchQuery])
 
   return (
     <>
@@ -66,22 +93,25 @@ export default function Home() {
       </Head>
       <main className={styles.container}>
 
-      <Search>
-        <div className='search-container'>
-          <form ref={query} onSubmit={querySearch}>
-            <input 
-              className='search-bar' 
-              type="text" 
-              placeholder='Search...'
-              name="search" 
-              value={searchQuery} ></input>
+        <button onClick={getPhotos}>Home</button>
+        <Search>
+          <div className='search-container'>
+            <form ref={formQuery} onSubmit={querySearch}>
+              <input 
+                className='search-bar' 
+                type="text" 
+                placeholder='Search...'
+                name="search" >
+              </input>
               <button className='search-button'>
                 <span className="ico ico-mglass"></span>
               </button>
-          </form>
-            
-        </div>
-      </Search>
+            </form>
+              
+          </div>
+        </Search>
+
+
        
         <section className={styles.flex}>
           {curatedPhotos?.photos.map(photo => {
@@ -93,6 +123,14 @@ export default function Home() {
                   width={photo.width / 10}
                   height={photo.height / 10}
                   />
+                  <div>
+                    {photo.photographer &&
+                      <p>{photo.photographer}</p>
+                    }
+                    {photo.url && 
+                      <a href={photo.url} target="_blank">Link</a>
+                    }
+                  </div>
               </div>
             )
           })}
@@ -101,7 +139,7 @@ export default function Home() {
         {curatedPhotos && 
           <Paginate>
             <Pagination
-              count={curatedPhotos.total_results}
+              count={Math.floor(curatedPhotos.total_results / curatedPhotos.per_page)}
               page={curatedPhotos.page}
               siblingCount={3}
               size='large'
