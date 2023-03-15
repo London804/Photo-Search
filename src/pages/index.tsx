@@ -1,59 +1,62 @@
 import Head from 'next/head';
 import Image from 'next/image';
-import { Inter } from 'next/font/google';
-import { useEffect, useState, useRef, useCallback } from 'react';
-import { getCuratedPhotos, getQueryPhotos } from './api/hello';
+import { useEffect, useState, useRef } from 'react';
+import { getCuratedPhotos, getQueryPhotos } from './api/photos';
 import {Paginate} from '../components/pagination.styles';
 import Pagination from '@mui/material/Pagination';
 import { Search } from '../components/search.styles';
 import { Photos } from '../components/photos/photos.styles';
 import { Main } from '../styles/home.styles';
+import { Spinner } from "chic-ui";
 
-
-const inter = Inter({ subsets: ['latin'] })
-interface Photos {
-  next_page: string;
-  previous_page?: string;
-  per_page: number;
-  photos: Array<object>;
-  total_results?: number;
-}
 
 export default function Home() {
   const [photos, setPhotos] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<any | null>(undefined);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<any | null>(null);
  
   const formQuery = useRef(null);
 
   const getPhotos = async (page?: number) => { 
+    setLoading(true);
     try {
       const data = await getCuratedPhotos(page)
       console.log('data', data);
       if (!data) {
-        console.log('error');
+        setError('No Photos found')
+        setLoading(false);
       } else {
         setPhotos(data);
         setSearchQuery(null)
+        setLoading(false);
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
+      setError(`error something went wrong, ${e}`)
+      setLoading(false);
     }
   }
 
   const queryPhotos = async (query: string, page?: number) => {
+    setLoading(true);
     try {
       const data = await getQueryPhotos(query, page)
       console.log('data', data);
       if (!data) {
-        console.log('error');
+        setError('No Photos found')
+        setLoading(false);
       } else {
         setPhotos(data);
+        setLoading(false);
         
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
+      setError(`error something went wrong, ${e}`)
+      setLoading(false);
     }
   }
 
@@ -108,26 +111,32 @@ export default function Home() {
       </Head>
       <Main>
 
-      <div className='header'>
-        <button className='home' onClick={() => getPhotos(1)}>Home</button>
-        <Search>
-          <div className='search-container'>
-            <form ref={formQuery} onSubmit={querySearch}>
-              <input 
-                className='search-bar' 
-                type="text" 
-                placeholder='Search...'
-                name="search" >
-              </input>
-              <button className='search-button'>
-                <span className="ico ico-mglass"></span>
-              </button>
-            </form>
-              
-          </div>
-        </Search>
-      </div>
-       
+        <div className='header'>
+          <button className='home' onClick={() => getPhotos(1)}>Home</button>
+          <Search>
+            <div className='search-container'>
+              <form ref={formQuery} onSubmit={querySearch}>
+                <input 
+                  className='search-bar' 
+                  type="text" 
+                  placeholder='Search...'
+                  name="search" >
+                </input>
+                <button className='search-button'>
+                  <span className="ico ico-mglass"></span>
+                </button>
+              </form>
+                
+            </div>
+          </Search>
+        </div>
+
+        {error && <div>{error}</div>}
+
+        {loading && <div className="loading">
+          <Spinner type="info" size={100}/>
+        </div>}
+        
         <Photos>
           {photos?.photos?.map(photo => {
             return ( 

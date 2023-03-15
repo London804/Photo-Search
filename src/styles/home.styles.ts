@@ -15,12 +15,18 @@ export const Main = styled.main`
       position: absolute;
       bottom: 0;
       height: 2.5rem;
-      padding: 0.25rem;
+      padding: 0 0.5rem;
       background: ${colors.white};
       color: ${colors.grey};
       border: ${colors.white};
       border-radius: 0.25rem;
     }
+  }
+
+  .loading {
+    display: flex;
+    justify-content: center;
+    margin-top: 6.25rem;
   }
 
 
