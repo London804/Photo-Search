@@ -67,7 +67,6 @@ export default function Home() {
       setSearchQuery(searchQuery);
     } else {
       if (pageNumber) {
-        console.log('pageNumber', pageNumber);
         getPhotos(Number(pageNumber));
       } else {
         getPhotos();
@@ -110,7 +109,7 @@ export default function Home() {
       <Main>
 
       <div className='header'>
-        <button className='home' onClick={getPhotos}>Home</button>
+        <button className='home' onClick={() => getPhotos(1)}>Home</button>
         <Search>
           <div className='search-container'>
             <form ref={formQuery} onSubmit={querySearch}>
@@ -158,8 +157,9 @@ export default function Home() {
               count={Math.floor(photos.total_results / photos.per_page)}
               page={photos.page}
               siblingCount={3}
-              size='large'
               onChange={changePage}
+              size="large"
+              className="resize"
             />
           </Paginate>
         }     
