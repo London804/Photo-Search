@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { Inter } from 'next/font/google';
-import styles from '@/styles/Home.module.css'
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { getCuratedPhotos, getQueryPhotos } from './api/hello';
 import {Paginate} from '../components/pagination.styles';
 import Pagination from '@mui/material/Pagination';
 import { Search } from '../components/search.styles';
 import { Photos } from '../components/photos/photos.styles';
+import { Main } from '../styles/home.styles';
 
 
 const inter = Inter({ subsets: ['latin'] })
@@ -22,6 +22,7 @@ interface Photos {
 export default function Home() {
   const [photos, setPhotos] = useState<any | null>(null);
   const [searchQuery, setSearchQuery] = useState<any | null>(undefined);
+ 
   const formQuery = useRef(null);
 
   const getPhotos = async (page?: number) => { 
@@ -106,9 +107,10 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <main className={styles.container}>
+      <Main>
 
-        <button onClick={getPhotos}>Home</button>
+      <div className='header'>
+        <button className='home' onClick={getPhotos}>Home</button>
         <Search>
           <div className='search-container'>
             <form ref={formQuery} onSubmit={querySearch}>
@@ -125,18 +127,19 @@ export default function Home() {
               
           </div>
         </Search>
+      </div>
        
         <Photos>
           {photos?.photos?.map(photo => {
             return ( 
-              <div className={styles.photo_container} key={photo.id}>
+              <div className="photo_container" key={photo.id}>
                 <Image 
                   src={photo.src.large}
                   alt={photo.alt}
                   width={photo.width / 10}
                   height={photo.height / 10}
                   />
-                  <div>
+                  <div className='info'>
                     {photo.photographer &&
                       <p>{photo.photographer}</p>
                     }
@@ -160,7 +163,7 @@ export default function Home() {
             />
           </Paginate>
         }     
-      </main>
+      </Main>
     </>
   )
 }

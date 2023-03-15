@@ -1,4 +1,5 @@
 import styled from 'styled-components';
+import { colors } from '../styles/colors.styles';
 
 export const Search = styled.section`
   display: flex;
@@ -33,20 +34,20 @@ export const Search = styled.section`
   .ico-mglass {
     position: relative;
     display:inline-block;
-    background: #fff;
+    background: ${colors.white};
     border-radius: 30px;
     height: 12px;
     width: 12px;
-    border: 2px solid #888;
+    border: 2px solid ${colors.grey};
     
     &:after {
       content: "";
       height: 4px;
       width: 9px;
-      background: #888;
-      position:absolute;
+      position: absolute;
       top: 8px;
       left: 5px;
+      background: #888;  // ${colors.grey} not working here
       -webkit-transform: rotate(45deg);
       -moz-transform: rotate(45deg);
         -ms-transform: rotate(45deg);
