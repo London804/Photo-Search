@@ -1,12 +1,14 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
-import { endpoints} from './api/photos';
-import {Paginate} from '../components/pagination.styles';
+import { endpoints } from './api/photos';
 import Pagination from '@mui/material/Pagination';
-import { Search } from '../components/search.styles';
-import { Photos } from '../components/photos/photos.styles';
-import { Main } from '../styles/home.styles';
+import {
+  Main,
+  Photos,
+  Paginate,
+  Search 
+} from './index.styles';
 import CircularProgress from '@mui/material/CircularProgress';
 
 

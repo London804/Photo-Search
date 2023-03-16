@@ -1,11 +1,9 @@
 // Next.js API route support: https://nextjs.org/docs/api-routes/introduction
-import type { NextApiRequest, NextApiResponse } from 'next'
 import { createClient } from 'pexels';
-
 
 const key = process.env.NEXT_PUBLIC_API_KEY;
 
-export const getCuratedPhotos = async (page?: number) => {
+const getCuratedPhotos = async (page?: number) => {
   console.log('pages', page)
   const client = createClient(key);
   try {
@@ -20,7 +18,7 @@ export const getCuratedPhotos = async (page?: number) => {
 }
 
 
-export const getQueryPhotos = async (query: string, page?: number,) => {
+const getQueryPhotos = async (query: string, page?: number,) => {
   console.log('hit')
   const client = createClient(key);
   try {
