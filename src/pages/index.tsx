@@ -16,7 +16,7 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<any | null>(null);
  
-  const formQuery = useRef(null);
+  const formQuery = useRef<any>(null);
 
   const getPhotos = async (page?: number) => { 
     setLoading(true);
@@ -45,16 +45,14 @@ export default function Home() {
       console.log('data', data);
       if (!data) {
         setError('No Photos found')
-        setLoading(false);
       } else {
         setPhotos(data);
-        setLoading(false);
-        
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
       setError(`error something went wrong, ${e}`)
+    } finally {
       setLoading(false);
     }
   }
@@ -67,6 +65,7 @@ export default function Home() {
       console.log('searchQuery init', searchQuery);
       queryPhotos(searchQuery, Number(pageNumber))
       setSearchQuery(searchQuery);
+      formQuery.current[0].value = searchQuery;
     } else {
       if (pageNumber) {
         getPhotos(Number(pageNumber));
@@ -95,6 +94,14 @@ export default function Home() {
     queryPhotos(searchText)
   })
 
+  const goHome = (page: number) => {
+    console.log('formQuery', formQuery);
+    if (formQuery.current) {
+      formQuery.current[0].value = '';
+    }
+    getPhotos(page);
+  }
+
   useEffect(() => {
     sessionStorage.setItem('page', photos?.page);
     sessionStorage.setItem('searchQuery', searchQuery);
@@ -111,7 +118,7 @@ export default function Home() {
       <Main data-testid='home'>
 
         <div className='header'>
-          <button className='home' onClick={() => getPhotos(1)}>Home</button>
+          <button className='home' onClick={() => goHome(1)}>Home</button>
           <Search data-testid='search'>
             <div className='search-container'>
               <form ref={formQuery} onSubmit={querySearch}>
