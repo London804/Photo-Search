@@ -1,13 +1,13 @@
 import Head from 'next/head';
 import Image from 'next/image';
 import { useEffect, useState, useRef } from 'react';
-import { getCuratedPhotos, getQueryPhotos } from './api/photos';
+import { endpoints} from './api/photos';
 import {Paginate} from '../components/pagination.styles';
 import Pagination from '@mui/material/Pagination';
 import { Search } from '../components/search.styles';
 import { Photos } from '../components/photos/photos.styles';
 import { Main } from '../styles/home.styles';
-import { Spinner } from "chic-ui";
+import CircularProgress from '@mui/material/CircularProgress';
 
 
 export default function Home() {
@@ -21,20 +21,19 @@ export default function Home() {
   const getPhotos = async (page?: number) => { 
     setLoading(true);
     try {
-      const data = await getCuratedPhotos(page)
+      const data = await endpoints.getCuratedPhotos(page)
       console.log('data', data);
       if (!data) {
         setError('No Photos found')
-        setLoading(false);
       } else {
         setPhotos(data);
         setSearchQuery(null)
-        setLoading(false);
       }
 
     } catch (e) {
       console.log('error something went wrong', e);
       setError(`error something went wrong, ${e}`)
+    } finally {
       setLoading(false);
     }
   }
@@ -42,7 +41,7 @@ export default function Home() {
   const queryPhotos = async (query: string, page?: number) => {
     setLoading(true);
     try {
-      const data = await getQueryPhotos(query, page)
+      const data = await endpoints.getQueryPhotos(query, page)
       console.log('data', data);
       if (!data) {
         setError('No Photos found')
@@ -109,11 +108,11 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
-      <Main>
+      <Main data-testid='home'>
 
         <div className='header'>
           <button className='home' onClick={() => getPhotos(1)}>Home</button>
-          <Search>
+          <Search data-testid='search'>
             <div className='search-container'>
               <form ref={formQuery} onSubmit={querySearch}>
                 <input 
@@ -134,7 +133,7 @@ export default function Home() {
         {error && <div>{error}</div>}
 
         {loading && <div className="loading">
-          <Spinner type="info" size={100}/>
+          <CircularProgress size={100}/>
         </div>}
         
         <Photos>
