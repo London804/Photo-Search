@@ -4,7 +4,7 @@ This is a web application built using the Next.js framework and the Pexels API. 
 
 ### Features
 - View a list of curated photos
-- Search for photos by name
+- Search for photos by name or topic
 - Click on a photo to view it in full size.
 - Pagination support for browsing through multiple pages of search results.
 

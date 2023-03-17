@@ -10,6 +10,7 @@ import {
   Search 
 } from './index.styles';
 import CircularProgress from '@mui/material/CircularProgress';
+import { Photo_Details } from '@/constants/photos.constant';
 
 
 export default function Home() {
@@ -26,14 +27,13 @@ export default function Home() {
       const data = await endpoints.getCuratedPhotos(page)
       console.log('data', data);
       if (!data) {
-        setError('No Photos found')
+        setError('There was a problem loading the photos')
       } else {
         setPhotos(data);
         setSearchQuery(null)
       }
 
     } catch (e) {
-      console.log('error something went wrong', e);
       setError(`error something went wrong, ${e}`)
     } finally {
       setLoading(false);
@@ -44,7 +44,6 @@ export default function Home() {
     setLoading(true);
     try {
       const data = await endpoints.getQueryPhotos(query, page)
-      console.log('data', data);
       if (!data) {
         setError('No Photos found')
       } else {
@@ -52,7 +51,6 @@ export default function Home() {
       }
 
     } catch (e) {
-      console.log('error something went wrong', e);
       setError(`error something went wrong, ${e}`)
     } finally {
       setLoading(false);
@@ -64,7 +62,6 @@ export default function Home() {
     const searchQuery = sessionStorage.getItem('searchQuery') || 'null';
    
     if (searchQuery !== 'null') {
-      console.log('searchQuery init', searchQuery);
       queryPhotos(searchQuery, Number(pageNumber))
       setSearchQuery(searchQuery);
       formQuery.current[0].value = searchQuery;
@@ -77,27 +74,24 @@ export default function Home() {
     }
   }, [])
   
-  const changePage = ((event, page) => {
-    console.log('searchQuery change page', searchQuery);
+  const changePage = ((event, page: number) => {
     if (!searchQuery) {
       getPhotos(page)
     } else {
       queryPhotos(searchQuery, page);
     }
+    window.scrollTo(0, 0);
 
   })
 
   const querySearch = ((query) => {
     query.preventDefault();
-
-    console.log('query', query?.target[0].value);
     const searchText = query?.target[0].value
     setSearchQuery(searchText)
     queryPhotos(searchText)
   })
 
   const goHome = (page: number) => {
-    console.log('formQuery', formQuery);
     if (formQuery.current) {
       formQuery.current[0].value = '';
     }
@@ -146,7 +140,7 @@ export default function Home() {
         </div>}
         
         <Photos>
-          {photos?.photos?.map(photo => {
+          {photos?.photos?.map((photo: Photo_Details ) => {
             return ( 
               <div className="photo_container" key={photo.id}>
                 <Image 

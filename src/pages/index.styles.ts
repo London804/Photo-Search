@@ -20,6 +20,7 @@ export const Main = styled.main`
       color: ${colors.grey};
       border: ${colors.white};
       border-radius: 0.25rem;
+      cursor: pointer;
     }
   }
 
