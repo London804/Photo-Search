@@ -10,9 +10,11 @@ export const Main = styled.main`
 
   .header {
     position: relative; 
+    display: flex;
+    justify-content: space-between;
+    padding: 0 0.5rem;
 
     .home {
-      position: absolute;
       bottom: 0;
       height: 2.5rem;
       padding: 0 0.5rem;
@@ -23,6 +25,17 @@ export const Main = styled.main`
       cursor: pointer;
     }
   }
+
+  @media only screen and (min-width: 768px) {
+    .header {
+      display: block;
+      justify-content: initial;
+    }
+
+    .home {
+      position: absolute;
+    }
+  } 
 
   .loading {
     display: flex;
@@ -49,11 +62,17 @@ export const Search = styled.section`
   }
 
   .search-bar {
-    width: 25rem;
+    width: 22rem;
     height: 2.5rem;
     border: none;
     padding: 0 3rem 0 1rem;
     border-radius: 0.5rem;
+  }
+
+  @media only screen and (min-width: 768px) {
+    .search-bar {
+      width: 25rem;
+    }
   }
 
   .search-button {
