@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { render, screen } from '@testing-library/react'
-import Home from './index';
-import { endpoints } from './api/photos';
+import Home from '../pages/index';
+import { endpoints } from '../pages/api/photos';
 import { mockPhotos } from '../constants/photos.constant';
 
 
@@ -12,6 +12,7 @@ describe('fetchData', () => {
 
     test('It will render search and home on load', async () => {
         const mockCuratedPhotos = jest.spyOn(endpoints, 'getCuratedPhotos');
+        // @ts-ignore
         mockCuratedPhotos.mockResolvedValue(mockPhotos);
         await render(<Home />)
 

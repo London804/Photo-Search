@@ -8,7 +8,7 @@ import {
   Photos,
   Paginate,
   Search 
-} from './index.styles';
+} from '../styles/index.styles';
 import CircularProgress from '@mui/material/CircularProgress';
 import { Photo_Details } from '@/constants/photos.constant';
 
@@ -74,6 +74,7 @@ export default function Home() {
     }
   }, [])
   
+  // @ts-ignore
   const changePage = ((event, page: number) => {
     if (!searchQuery) {
       getPhotos(page)
@@ -84,6 +85,7 @@ export default function Home() {
 
   })
 
+  // @ts-ignore
   const querySearch = ((query) => {
     query.preventDefault();
     const searchText = query?.target[0].value
